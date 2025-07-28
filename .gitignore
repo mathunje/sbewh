@@ -1,0 +1,12 @@
+test/build
+build/*
+debug/*
+runs/*
+
+*.sw*
+.direnv
+.envrc
+
+scripts/__pycache__
+scripts/temp
+
