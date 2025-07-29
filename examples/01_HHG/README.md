@@ -4,7 +4,7 @@ First have a look at the **input.txt** file.
 We can calculate the time dependent expecation values for silicon in a 1D projected model, via
 
 ```
-[mpiexec -np 4] ./sbewh [input.txt]
+[mpiexec -np 4] ../../sbewh [input.txt]
 ```
 
 As the **input.txt** does not modify the output options, the results are stores in the **runs/001** directory. The number increases automatically for each new run.
