@@ -1,0 +1,21 @@
+#ifndef SBE_WH_CONFIG_H
+#define SBE_WH_CONFIG_H
+
+#cmakedefine SBE_WH_OPENMP
+#cmakedefine SBE_WH_MPI
+#cmakedefine SBE_WH_LAPACK
+#cmakedefine SBE_WH_CUDA
+
+#define SBE_WH_VERSION_MAJOR @SBE_WH_VERSION_MAJOR@
+#define SBE_WH_VERSION_MINOR @SBE_WH_VERSION_MINOR@
+
+
+#define SBE_WH_MAX_PULSE_COUNT (10)
+
+namespace sbewhConfig
+{
+    static int pulseParameterPadLength = 15;
+}
+
+
+#endif
