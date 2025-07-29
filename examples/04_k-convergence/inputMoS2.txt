@@ -1,0 +1,35 @@
+[General]
+runMode = SBE
+dimensionality = 2
+verbose = 1
+
+[TightBinding]
+wannierSeed = ../data/MoS2
+
+#this defines the initial state
+occupiedBelowBandGap = 4
+
+[FourierTransform]
+# the FFT is applied to blocks of this size
+Nf = 9
+
+[Parallelization]
+maxThreadCount = 1 # remove/comment this if you want to use OMP instead of use MPI
+
+[Pulse]
+pol = 1, 0, 0
+Emax = 2 # V/nm
+lambda = 3000 # nm
+FWHM = 30.02 # fs
+type = sin2
+
+# Definition of propagation time in units of FWHM
+tStart = -1
+tEnd = 1
+
+[Propagation]
+Nk = 36
+outputCount = 300
+
+T2 = 10 # fs
+soothingWidth =  0.025 # eV

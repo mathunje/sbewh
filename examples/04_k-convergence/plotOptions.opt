@@ -1,0 +1,19 @@
+[expectationValues]
+plotCurrentRelativeThreshold = 1e-4
+plotErelativeThreshold = 0.05
+
+
+[spectrum]
+omegaMin_eV = 0.1
+omegaMax_eV = 12
+relSmoothWidth = 0.1
+dOmega = 0.01
+useFFT = 1
+
+
+[multipleSpectra]
+maxEv = 12
+minEv = 0.1
+relSmoothWidth = 0.1
+directFT = 0
+dOmega = 0.01
