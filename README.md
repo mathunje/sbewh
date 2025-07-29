@@ -6,6 +6,8 @@ Package for the fast numerical propagation of the **Wannierized semiconductor Bl
 - Parallelized for efficient execution on HPCs
 - Implemented for the CPU and GPU
 
+We provide a variety of python scripts to visualize the high-harmonic spectrum, the density matrices, occupation numbers and other quantities of interest.
+
 ## How to cite our solver
 
 When using our solver for a publication, we kindly ask you to cite
@@ -14,8 +16,9 @@ M. Thümmler, T. Lettau,  A. Croy, U. Peschel, and S. Gräfe,  Semiconductor Blo
 
 ## Requirements
 
-Our C++20 code (for the propagation) requires has following (optional) dependencies. Older versions may work too.
+Our code was written using the C++20 standard and requires the following dependencies. Version numbers refer to the the ones used in development.
 
+C++ (compiler??)
 - FFTW 3.3.10
 - Boost version >= 1.53
 - zlib 1.3.1
@@ -23,24 +26,27 @@ Our C++20 code (for the propagation) requires has following (optional) dependenc
 - Openmp 4.5 - optional
 - MKL Lapack implementation (2023.1) - optional but strongly recomended
 - CudaToolkit 12.4.99 - optional
-- GoogleTest - only required for tests
+- GoogleTest - only required for testing
 
-Python (for the evaluation) developed on Python 3.12.8.
+Python 3.12.8
+- numpy 2.20
+- scipy 1.14.1
+- matplotlib 3.9.2
+- psutil 6.1.1
 
-- numpy (2.20)
-- scipy (1.14.1)
-- matplotlib (3.9.2)
-- psutil (6.1.1)
+For convenience, we provide a [nix-flake](https://nixos.org/). To start a development shell simply run
 
-A much more convenient way is to setup [nix](https://nixos.org/) and start a development shell
-
-```
+```bash
 nix develop nix/flake.nix
+```
+It might be required to enable experimental features
+```bash
+nix develop --extra-experimental-features flakes --extra-experimental-features  nix-command nix/
 ```
 
 where everything is setupc.
 
-## Setup (Linux)
+## Installation instructions (Linux)
 
 After cloning this repository, create a build directory and run cmake:
 
@@ -48,7 +54,7 @@ After cloning this repository, create a build directory and run cmake:
 mkdir build && cd build && cmake ..
 ```
 
-The libraries are automatically detected. Now you can compile:
+The libraries are automatically detected. Now you can compile the project using
 
 ```
 make -j
@@ -66,7 +72,7 @@ Currently, the autocompletion will only work inside your build directory. If you
 
 ## Documentation and Examples
 
-The example directory contains common use cases and introduces all the required input parameters and the intended way to call the evaluation scripts. By default the file **input.txt** is parse, but you may provide another input file name as command line argument.
+The example directory contains common use cases and introduces all the required input parameters and the intended way to call the evaluation scripts. By default the file **input.txt** is parsed, but you may provide another input file name as a command line argument.
 A help message may be requested like
 
 ```
