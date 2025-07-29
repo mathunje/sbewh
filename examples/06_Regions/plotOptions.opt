@@ -1,0 +1,26 @@
+[expectationValues]
+maxEv = 8
+minEv = 0
+plotCurrentRelativeThreshold = 1e-4
+plotErelativeThreshold = 0.05
+
+
+[spectrum]
+omegaMin_eV = 0.1
+omegaMax_eV = 8
+useFFT = 1
+relSmoothWidth = 0.1
+
+
+[displayOccupations1D]
+figSize = 10 6
+fixedAxis = 0
+kFracOff =  0 0 0
+relIndexShift = -0.5
+lineStyle = -
+
+
+[displayDensityMatrix]
+useLogNorm = 0
+vmin = 0
+vmax = 1
