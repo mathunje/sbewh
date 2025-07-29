@@ -1,0 +1,15 @@
+[expectationValues]
+
+# both in fs
+postDampThresTau = 100  # showAbsorption: damping is enabled if dephasing time is bigger than
+postDampTau = 3
+
+absorption_in_nm = 0
+
+[spectrum]
+omegaMin_eV = 0.1
+omegaMax_eV = 8
+dOmega_eV  = 0.2
+
+useFFT = 0
+smearingWidth_eV = 0.02 # in eV

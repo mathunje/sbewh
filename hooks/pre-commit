@@ -1,0 +1,166 @@
+#!/usr/bin/env bash
+
+if git rev-parse --verify HEAD >/dev/null 2>&1
+then
+	against=HEAD
+else
+	# Initial commit: diff against an empty tree object
+	against=$(git hash-object -t tree /dev/null)
+fi
+
+# Redirect output to stderr.
+exec 1>&2
+
+
+# If there are whitespace errors, print the offending file names
+git diff-index --check --cached $against --
+if [ $? -ne 0 ]; then
+    exit 1
+fi
+
+repoDir=$(pwd)
+
+
+if [ ! -e test/build ]; then
+    mkdir test/build
+fi
+
+
+
+
+#############
+# compile and run tests
+#############
+
+cd test/build
+echo "Building tests..."
+
+cmake .. &> /dev/null
+if [ $? -ne 0 ]; then
+    rm CMakeCache.txt
+    err=$(cmake ..  2>&1 >/dev/null)
+    if [ $? -ne 0 ]; then
+        echo " -> cmake failed";
+        echo "----------------";
+        echo "";
+        echo "$err"
+        exit 1;
+    fi
+fi
+
+out=$(make -j4)
+if [ $? -ne 0 ]; then
+    echo " -> make failed"
+    echo "---------------";
+    echo "";
+    echo "$out"
+    exit 1
+fi
+
+echo "Running tests..."
+out=$(./t)
+if [ $? -ne 0 ]; then
+    echo " -> ./t tests failed"
+    echo "--------------------";
+    cropped=${out#*"[----------] Global test environment tear-down"}
+    echo "${cropped}";
+    if [ ${#cropped} -eq ${#out} ]; then
+        echo "Please update pre-commit hook to crop gtest output properly"
+    fi
+    exit 1
+fi
+
+
+#############
+# compile main program
+#############
+
+cd "$repoDir"
+echo "Building sbewh..."
+if [ ! -e build ]; then
+    mkdir build
+fi
+cd build
+
+cmake .. &> /dev/null
+if [ $? -ne 0 ]; then
+    rm CMakeCache.txt
+    err=$(cmake ..  2>&1 >/dev/null)
+    if [ $? -ne 0 ]; then
+        echo " -> cmake failed";
+        echo "----------------";
+        echo "";
+        echo "$err"
+        exit 1;
+    fi
+fi
+
+out=$(make -j4)
+if [ $? -ne 0 ]; then
+    echo " -> make failed"
+    echo "---------------";
+    echo "";
+    echo "$out"
+    exit 1
+fi
+
+
+#############
+# run examples in dry run mode
+#############
+
+echo "Running examples in dry mode..."
+cd "$repoDir/build"
+if [ ! -e examples ]; then
+    mkdir examples
+else
+    rm -rf examples/*
+fi
+cd examples
+
+err=$(unzip "$repoDir/examples/data/data.zip" -d data 2>&1 >/dev/null)
+if [ $? -ne 0 ]; then
+    echo "Failed to unzip example data"
+    echo "$err"
+    exit 1
+fi
+
+# to align directory structure with the one in examples
+mkdir subDir
+cd subDir
+
+exampleDirs=$(ls $repoDir/examples)
+for dir in $exampleDirs; do
+    if [[ $dir != *"_"* ]]; then
+        continue
+    fi
+    inpFiles=$(ls $repoDir/examples/$dir/input*)
+    if [ $? -ne 0 ]; then
+        exit 1;
+    fi
+    cp $repoDir/examples/$dir/* .
+    for inpF in $inpFiles; do
+        out=$(../../sbewh "$inpF" -General.dryRun=1)
+        if [ $? -ne 0 ]; then
+            echo "Dry run of example $inpF failed"
+            echo "$out";
+            exit 1
+        fi
+    done
+done;
+
+
+#############
+# check that completion script is up to date
+#############
+
+echo "Generating and comparing bash completion file..."
+cd $repoDir/build
+../hooks/generateBashCompletionScript.py > completion.sh
+diffOut=$(diff <(sed '/complete -F/d' completion.sh) <( sed '/complete -F/d' ../scripts/completion.sh) -b -B)
+lineCount=$(echo -n "$diffOut" | grep -c '^')
+if [ $lineCount -ne 0 ]; then
+    echo "Completion script differs too much to freshly generated one (in ../build/completion.sh)\n"
+    echo "$diffOut"
+    exit 1
+fi

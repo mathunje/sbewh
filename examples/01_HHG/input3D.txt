@@ -1,0 +1,40 @@
+[General]
+runMode = SBE
+veryVerbose = 1
+
+[TightBinding]
+wannierSeed = ../data/silicon
+
+#this defines the initial condition
+occupiedBands = 4
+
+[FourierTransform]
+Nf = 8 8 8
+
+[Diagonalization]
+# we use the default settings
+
+[Parallelization]
+maxThreadCount = 1 # remove/comment this if you want to use OMP instead of use MPI
+independentMpiIntegrations = 1
+
+[Pulse]
+pol = 1, 0, 0
+Emax = 0.5 # V/nm
+lambda = 3000 # nm
+FWHM = 15.01038427374185 # fs
+type = sin2
+
+# Definition of propagation time in units of FWHM
+tStart = -1
+tEnd = 1
+
+[Propagation]
+Nk = 16 16 8
+outputCount = 200
+
+T2 = 2 # fs
+soothingWidth =  0.025 # eV
+
+[Output]
+# we use the defaut settings
