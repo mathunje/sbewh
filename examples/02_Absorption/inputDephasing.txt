@@ -1,0 +1,38 @@
+[General]
+runMode = SBE
+dimensionality = 2 # to reduce the compuation time of the example
+veryVerbose = 1
+
+[TightBinding]
+wannierSeed = ../data/silicon
+
+#this defines the initial state
+occupiedBands = 4
+
+[FourierTransform]
+# the FFT is applied to blocks of this size
+Nf = 8
+
+[Diagonalization]
+# we use the default settings
+
+[Parallelization]
+maxThreadCount = 1 # remove/comment this if you want to use OMP instead of use MPI
+
+[Pulse]
+pol = 1, 0, 0
+Emax = 2 # V/nm
+FWHM = 0.1 # fs
+type = pureGauss
+
+# Definition of propagation time in units of FWHM
+tStart = -10
+tEnd = 100
+
+[Propagation]
+Nk = 16
+outputCount = 1000
+T2 = 3
+
+# we use the defaut settings
+# [Output]
