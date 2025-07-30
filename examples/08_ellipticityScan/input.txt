@@ -1,0 +1,41 @@
+[General]
+runMode = SBE
+verbose = 1
+dimensionality = 2
+
+[TightBinding]
+symmetrizeHamiltonian = 0
+onlyRealMatrixElements = 0
+wannierSeed = ../data/MoS2
+occupiedBelowBandGap = 1
+
+[FourierTransform]
+Nf = 10
+
+[Parallelization]
+independentMpiIntegrations = 1
+maxThreadCount = 1 # remove/comment this if you want to use OMP instead of use MPI
+
+[Pulse]
+multiRunFile = ellipticities.txt
+lambda = 3000 # nm
+tStart = -1 # in units of FWHM
+tEnd = 1
+type = sin2
+FWHM = 30.02 # fs
+
+pol1 = 1, 0, 0
+pol2 = 0, 1, 0
+
+cep1 = 0
+# cep2 = 1
+# Emax1 = 2 # V/nm
+# Emax2 = 2 # V/nm
+
+[Propagation]
+allowNkAdaption = 0
+Nk = 40 40
+outputCount = 500
+
+T2 = 10 fs
+soothingWidth =  0.025
