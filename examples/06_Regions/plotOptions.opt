@@ -1,6 +1,4 @@
 [expectationValues]
-maxEv = 8
-minEv = 0
 plotCurrentRelativeThreshold = 1e-4
 plotErelativeThreshold = 0.05
 
