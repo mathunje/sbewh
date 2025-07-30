@@ -18,8 +18,8 @@ import util.runParsing as runParsing
 
 def showHHG(data, region, inputVars, spectrumCalculator, plotOpts, saveBaseName):
     omega0 = atu.lambda_nm(inputVars['Pulse.lambda'])
-    plotCurrentRelativeThreshold = plotOpts.get('plotCurrentRelativeThreshold', 0.1)
-    plotErelativeThreshold = plotOpts.get('plotErelativeThreshold', 1)
+    plotCurrentRelativeThreshold = plotOpts.get('plotCurrentRelativeThreshold', 1e-10)
+    plotErelativeThreshold = plotOpts.get('plotErelativeThreshold', 1e-10)
     expv = common.extractRegionDict(data, region)
     pulse = runParsing.subGroupDict(data, "pulse")
 
