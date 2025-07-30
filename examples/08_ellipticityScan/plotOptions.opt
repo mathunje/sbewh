@@ -1,0 +1,15 @@
+[expectationValues]
+plotCurrentRelativeThreshold = 1e-10
+plotErelativeThreshold = 1e-10
+
+
+# This section defines how the HHG spectrum is calculated
+[spectrum]
+# range
+omegaMin_eV = 0.1
+omegaMax_eV = 10
+
+[ellipticity]
+vmin = 1e-5
+vmax = 1e-1
+normalizeProfiles = 1
