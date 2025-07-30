@@ -1,0 +1,20 @@
+[General]
+runMode = FermiLevel
+verbose = 1
+
+[TightBinding]
+wannierSeed = ../data/silicon
+occupiedBelowBandGap = 1
+
+[FourierTransform]
+Nf = 8 8 8
+
+[Diagonalization]
+mode = zheevd
+
+[Parallelization]
+useGPU = 0
+
+[Propagation]
+# the fermi level will be evaluated based on this grid
+Nk = 16 16 16

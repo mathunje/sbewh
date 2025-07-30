@@ -1,0 +1,21 @@
+[General]
+runMode = FermiLevel
+verbose = 1
+
+[TightBinding]
+wannierSeed = ../data/silicon
+occupiedBelowBandGap = 1
+
+[FourierTransform]
+Nf = 8 8 8
+
+[Diagonalization]
+# with these parameters, the diagonalization is only approximately performed
+mode = jacobi
+maxSweepCount = 2
+
+[Parallelization]
+useGPU = 0
+
+[Propagation]
+Nk = 16 16 16
