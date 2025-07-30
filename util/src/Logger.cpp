@@ -47,7 +47,7 @@ void Logger::printTime()
         return;
     }
     if ( min==0 ){
-        printf("[%14lum %03lums]: ", s%60, ms%1000);
+        printf("[%14lus %03lums]: ", s%60, ms%1000);
         return;
     }
     if ( h==0 ){

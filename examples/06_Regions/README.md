@@ -3,7 +3,7 @@
 First have a look at the **input.txt** file. It describes a typical HHG calculation for MoS2. In **KspaceRegions** we define multiple regions either in a fixed frame or (with the vector potential) moving frame. One can sample the Brillouin-zone at single points or at multiple points on a line, area, or volume. The code will over all the expectation values of the propagation grid using a Gaussian window for each point.
 To run the example call:
 ```
-mpiexec -np 16 ./sbewh [input.txt]
+mpiexec -np 16 ../../build/sbewh [input.txt]
 ```
 (Maybe you have to reduce the number of processes). You can plot the result for a single *k*-point like
 ```

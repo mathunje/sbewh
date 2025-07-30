@@ -6,7 +6,7 @@ The examples **may fail on purpose** if you start them via MPI with more process
 In all examples it is save to run
 
 ```
-mpiexcec -np 4 ./sbewh [input.txt]
+mpiexcec -np 4 ../../build/sbewh [input.txt]
 ```
 or to increase the size of the propagation grid in the input file to ensure that each process can evaluated at least one subgrid.
 
