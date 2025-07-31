@@ -14,7 +14,7 @@ Nf = 10
 
 [Parallelization]
 independentMpiIntegrations = 1
-maxThreadCount = 1 # remove/comment this if you want to use OMP instead of use MPI
+maxThreadCount = 1 # Remove/comment this if you want to use OMP instead of use MPI
 
 [Pulse]
 pol = 1, 0, 0
@@ -22,7 +22,7 @@ Emax = 2 # V/nm
 cep = 0
 lambda = 3000 # nm
 FWHM = 30.02 # fs
-tStart = -1 # in units of FWHM
+tStart = -1 # In units of FWHM
 tEnd = 1
 type = sin2  #sin2 #sin2 # gauss # sin2Ramp # gauss #pureGauss
 
@@ -35,26 +35,26 @@ T2 = 2 fs
 soothingWidth =  0.025
 
 [KspaceRegions]
-storeDensityMatrix = 1 # additionally store density matrix, otherwise only expectationValues for each region are collected
-densityOutputStride = 6 # write out density matrix every 6 output cycles
+storeDensityMatrix = 1 # Additionally store density matrix, otherwise only expectationValues for each region are collected
+densityOutputStride = 6 # Write out density matrix every 6 output cycles
 
-Ks = F 0.33333333 0.33333333 0  0.1  # fixed Region around K-Point (Gaussian width of 0.1 in fractional coordinates)
-Km = M 0.33333333 0.33333333 0  0.1  # same as above, but moves with vector potential
+Ks = F 0.33333333 0.33333333 0  0.1  # Fixed Region around K-Point (Gaussian width of 0.1 in fractional coordinates)
+Km = M 0.33333333 0.33333333 0  0.1  # Same as above, but moves with vector potential
 
 slice = M 0.3333333 0.33333333 0 \
           0.6666666 0.66666666 0 \
-          50 I 0.100000  # samples 50 points from K to K' inclusive
+          50 I 0.100000  # Samples 50 points from K to K' inclusive
 
 
-# the fixed option should be used carefully as a too small FWHM (with respect to 1/Nk) may
-# lead to numerical artifacts
+# The fixed option should be used carefully as a too small FWHM (with respect to 1/Nk) may
+# Lead to numerical artifacts
 area  = F 0 0 0 \
           1 0 0 \
           0 1 0 \
-          20 20 E 0.05  # samples 20x20 points on Brillouin zone ( E : exclusive as for instance  0 0 and 1 1 are the same)
+          20 20 E 0.05  # Samples 20x20 points on Brillouin zone ( E : exclusive as for instance  0 0 and 1 1 are the same)
 
 
-# volume samples can be requested like
+# Volume samples can be requested like
 #volume = M 0 0 0 \
 #           1 0 0 \
 #           0 1 0 \

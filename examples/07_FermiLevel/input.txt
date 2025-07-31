@@ -16,5 +16,5 @@ mode = zheevd
 useGPU = 0
 
 [Propagation]
-# the fermi level will be evaluated based on this grid
+# The fermi level will be evaluated based on this grid
 Nk = 16 16 16

@@ -10,11 +10,11 @@ wannierSeed = ../data/MoS2
 occupiedBelowBandGap = 4
 
 [FourierTransform]
-# the FFT is applied to blocks of this size
+# The FFT is applied to blocks of this size
 Nf = 9
 
 [Parallelization]
-maxThreadCount = 1 # remove/comment this if you want to use OMP instead of use MPI
+maxThreadCount = 1 # Remove/comment this if you want to use OMP instead of use MPI
 
 [Pulse]
 pol = 1, 0, 0

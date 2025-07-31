@@ -4,28 +4,28 @@ runMode = Pulse
 [Pulse]
 
 # These are the default values applied to all subpulses
-# the overall pulse is the sum of the subpulses
+# The overall pulse is the sum of the subpulses
 FWHM = 30
 pol = 1, 0, 0
 type = sin2
 lambda = 2000
 
-# in units of FWHM, i.e. from -30 to 30 fs
+# In units of FWHM, i.e. from -30 to 30 fs
 tStart = -1
 tEnd = 1
 
-# first subpulse
+# First subpulse
 Emax1 = 1
 lambda1 = 3000
 
-# second one, with cep, lower wavelength and shifted
+# Second subpulse, with CEP, lower wavelength and shifted
 Emax2 = 0.1
 lambda2 = 1000
 cep2 = 1.57
-tCentral2 = -10 # in fs
+tCentral2 = -10 # fs
 
 
-# ramp pulse
+# Ramp pulse
 Emax3 = 0.2
 pol3 = 0, 1, 0
 type3 = sin2Ramp
@@ -33,7 +33,7 @@ risingCycles3 = 1.5
 cyclesOn = 4
 
 
-# gaussian envelope
+# Gaussian envelope
 Emax4 = 0.4
 pol4 = 0, 0, 1
 type4 = gauss
@@ -42,7 +42,7 @@ tStart4 = -4
 tEnd4 = 4
 
 
-# pure gaus pulse
+# Pure Gaussian pulse
 Emax5 = 0.5
 pol5 = 0, 0, 1
 type5 = pureGauss
@@ -53,5 +53,5 @@ tEnd5 = 4
 
 [Propagation]
 
-# The output time range is automatically choosed to cover all pulses form their beginning to their end
+# The output time range is automatically chosen to cover all pulses form their beginning to their end
 outputCount = 1000
