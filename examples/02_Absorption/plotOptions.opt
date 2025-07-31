@@ -1,7 +1,7 @@
 [expectationValues]
 
 # both in fs
-postDampThresTau = 100  # showAbsorption: damping is enabled if dephasing time is bigger than
+postDampThresTau = 100  # showAbsorption: damping is enabled if the dephasing time is bigger than
 postDampTau = 3
 
 absorption_in_nm = 0

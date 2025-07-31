@@ -13,6 +13,6 @@ The absorption spectra can be displayed via
 ../../scripts/showExpectationValues.py runs
 ```
 
-The script detects automatically that a PureGaussian pulse was used for the propagation.
+The script detects automatically that a pure Gaussian pulse (pureGauss) was used for the propagation.
 It is also possible to calculate the absorption using Kramers rule without applying dephasing during the propagation.
 Just run **inputNoDephasing.txt** and have a look at **plotOptions.opt**.

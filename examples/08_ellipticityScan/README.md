@@ -1,6 +1,7 @@
 ## Ellipticity dependency of HHG
 
-First have a look at the **input.txt** file. It describes a typical HHG calculation for MoS2 and specifies some default options of the pulse. The option **Pulse.multiRunFile** refers to a additional configuration file, which can be generated via
+First have a look at the **input.txt** file.
+It describes a typical HHG calculation for MoS2 and specifies some default options of the pulse. The option **Pulse.multiRunFile** refers to a additional configuration file, which can be generated via
 
 ```
 ./generateEllipticitiyRuns.py 11 2

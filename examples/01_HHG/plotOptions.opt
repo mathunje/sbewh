@@ -12,6 +12,6 @@ dOmega_eV  = 0.04 # minimum resolution
 useFFT = 1 # FFT will be used, this may result in better higher resolution
 fadeOut_rel = 0.1 # the last 10% of the current will be damped when using FFT to zero to ensure periodic boundary conditions
 
-# witdh of gaussian smearing after calculation of spectra
+# width of gaussian smearing after calculation of spectra
 smearingWidth_rel = 0.1 # in units of fundamental energy
 # smearingWidth_eV = 0.1 # in eV

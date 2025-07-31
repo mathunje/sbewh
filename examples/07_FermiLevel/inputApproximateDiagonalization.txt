@@ -10,7 +10,7 @@ occupiedBelowBandGap = 1
 Nf = 8 8 8
 
 [Diagonalization]
-# with these parameters, the diagonalization is only approximately performed
+# With these parameters, the diagonalization is only approximately performed
 mode = jacobi
 maxSweepCount = 2
 

@@ -5,7 +5,7 @@ plotErelativeThreshold = 1e-10
 
 # This section defines how the HHG spectrum is calculated
 [spectrum]
-# range
+# Range
 omegaMin_eV = 0.1
 omegaMax_eV = 10
 

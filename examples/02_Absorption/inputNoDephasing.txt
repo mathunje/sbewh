@@ -1,6 +1,6 @@
 [General]
 runMode = SBE
-dimensionality = 2 # to reduce the compuation time of the example
+dimensionality = 2 # To reduce the computation time of the example
 veryVerbose = 1
 
 [TightBinding]
@@ -10,14 +10,14 @@ wannierSeed = ../data/silicon
 occupiedBands = 4
 
 [FourierTransform]
-# the FFT is applied to blocks of this size
+# The FFT is applied to blocks of this size
 Nf = 8
 
 [Diagonalization]
-# we use the default settings
+# We use the default settings
 
 [Parallelization]
-maxThreadCount = 1 # remove/comment this if you want to use OMP instead of use MPI
+maxThreadCount = 1 # Remove/comment this if you want to use OMP instead of use MPI
 
 [Pulse]
 pol = 1, 0, 0
@@ -33,5 +33,5 @@ tEnd = 100
 Nk = 16 # Nk = 256 would lead to "smoother" occupation
 outputCount = 1000
 
-# we use the defaut settings
+# We use the default settings
 # [Output]

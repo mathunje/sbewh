@@ -12,10 +12,10 @@ occupiedBands = 4
 Nf = 8 8 8
 
 [Diagonalization]
-# we use the default settings
+# We use the default settings
 
 [Parallelization]
-maxThreadCount = 1 # remove/comment this if you want to use OMP instead of use MPI
+maxThreadCount = 1 # Remove/comment this if you want to use OMP instead of use MPI
 independentMpiIntegrations = 1
 
 [Pulse]
@@ -37,4 +37,4 @@ T2 = 2 # fs
 soothingWidth =  0.025 # eV
 
 [Output]
-# we use the defaut settings
+# We use the default settings

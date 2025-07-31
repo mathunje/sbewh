@@ -14,12 +14,12 @@ Nf = 10
 
 [Parallelization]
 independentMpiIntegrations = 1
-maxThreadCount = 1 # remove/comment this if you want to use OMP instead of use MPI
+maxThreadCount = 1 # Remove/comment this if you want to use OMP instead of use MPI
 
 [Pulse]
 multiRunFile = ellipticities.txt
 lambda = 3000 # nm
-tStart = -1 # in units of FWHM
+tStart = -1 # In units of FWHM
 tEnd = 1
 type = sin2
 FWHM = 30.02 # fs
