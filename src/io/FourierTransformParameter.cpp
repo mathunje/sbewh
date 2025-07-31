@@ -33,7 +33,9 @@ FourierTransformParameterValidator::FourierTransformParameterValidator(Parameter
     paramIO.registerParam(new ParameterBool("performDirectCalculation",
                 "if set, the Fourier transform is evalualuated via direct sum for comparison, too.", performDirectCalculation, false));
     paramIO.registerParam(new ParameterVector<unsigned>("saveIndices",
-                "defines submatrix for which H and D are saved in WHtransform run mode (0-indexed)", saveIndices, {1}, ", "));
+                "defines submatrix for which H and D are saved in WHtransform run mode (0-indexed).\n"
+                "\tIf this parameter is not set, all matrix elements will be written\n"
+                "\tWARNING: This may lead to huge files",  saveIndices, {}, ", "));
     std::string description = "planning mode used by fftw, must be one of:";
     for(const auto &[s, _] : planningModeMap)
         description += " " + s;
@@ -51,6 +53,10 @@ FourierTransformParameterValidator::FourierTransformParameterValidator(Parameter
 bool FourierTransformParameterValidator::update(FourierTransformParameter_t *p, const TightBindingParameter_t &tb, unsigned dim)
 {
     p->performDirectCalculation = performDirectCalculation;
+    if ( saveIndices.size() == 0){
+        for(unsigned i=0; i<tb.numWann; i++)
+            saveIndices.push_back(i);
+    }
     for(unsigned si : saveIndices)
         if ( si >= tb.numWann){
             Logger::error("To high saveIndex for FourierTransform %u/%u\n", si, tb.numWann);

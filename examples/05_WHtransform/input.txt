@@ -8,8 +8,6 @@ occupiedBands = 4
 
 [FourierTransform]
 Nf = 8
-# The indices restrict the Wanner-indices that will be written to the output.
-saveIndices = 0, 1, 2, 3, 4, 5, 6, 7
 
 [Parallelization]
 useGPU = 0

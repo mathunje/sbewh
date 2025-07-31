@@ -1,0 +1,15 @@
+[General]
+runMode = WHtransform
+dimensionality = 2
+
+[TightBinding]
+wannierSeed = ../data/MoS2
+occupiedBands = 4
+
+[FourierTransform]
+Nf = 10
+# Restrict the matrix row and colum of the matrix elements that will be written to the output (zero-indexed).
+saveIndices = 5, 6, 7
+
+[Propagation]
+Nk = 160

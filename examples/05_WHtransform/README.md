@@ -6,7 +6,10 @@ You can generate the matrix elements via
 ```
 ../../build/sbewh [input.txt]
 ```
-and visualize them (only for 2D and 3D) via
+and visualize them via
 ```
 ../../scripts/showFourierTransformedMatrices.py runs
 ```
+In the 2D and 3D visualizations you can double click on the colormaps to display the matrix elements in an additional popup window.
+The 1D visualization allows you to hide the matrix elements by clicking on the check buttons on the left side.
+Another example is provided in **inputMoS2.txt**.
