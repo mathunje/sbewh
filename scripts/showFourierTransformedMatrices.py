@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 
+import argparse
 import numpy as np
 import os
-import pathlib
 import sys
 
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Button, Slider, RadioButtons, CheckButtons
 from matplotlib import colors, gridspec
 
-import argparse
 
 import util.runParsing as runParsing
 
@@ -18,10 +17,12 @@ class GUI_3D:
         wanIndices = data['WanIndices']
         if showMode == "Dk":
             self.operators = np.stack((data['H0'], data['Dkx'], data['Dky'], data['Dkz']))
+            self.opLabels = [ r"$H$ [a.u.]", r"$D_x$ [a.u.]", r"$D_y$ [a.u.]", r"$D_z$ [a.u.]"]
             self.opMagLabels = [ r"$|H|$ [a.u.]", r"$|D_x|$ [a.u.]", r"$|D_y|$ [a.u.]", r"$|D_z|$ [a.u.]"]
             self.opPhaseLabels = [ r"$\arg(H)$", r"$\arg(D_x)$", r"$\arg(D_y)$", r"$\arg(D_z)$"]
         elif showMode == "dHdk":
             self.operators = np.stack((data['H0'], data['dHdkx'], data['dHdky'], data['dHdkz']))
+            self.opLabels = [ r"$H$ [a.u.]", r"$\frac{dH}{k_x}$ [a.u.]", r"$\frac{dH}{k_y}$ [a.u.]", r"$\frac{dH}{dk_z}$ [a.u.]"]
             self.opMagLabels = [ r"$|H|$ [a.u.]", r"$|\frac{dH}{k_x}|$ [a.u.]", r"$|\frac{dH}{k_y}|$ [a.u.]", r"$|\frac{dH}{dk_z}|$ [a.u.]"]
             self.opPhaseLabels = [ r"$\arg(H)$", r"$\arg(\frac{dH}{k_x})$", r"$\arg(\frac{dH}{k_y})$", r"$\arg(\frac{dH}{k_z})$"]
         else:
@@ -165,24 +166,32 @@ class GUI_3D:
             for e, [imOrigAbs, imOrigPhase] in enumerate(self.ims):
                 if event.inaxes in [imOrigAbs.axes, imOrigPhase.axes]:
                     opMatrix = self.getSlicedOps()[e, :, :]
-                    popupFig, (axAbs, axPhase)  = plt.subplots(1, 2)
-                    imAbs = axAbs.imshow(np.abs(opMatrix), extent=[self.bMin, self.bMin+1, self.bMin, self.bMin+1])
-                    cbar = popupFig.colorbar(imAbs, ax=axAbs, orientation='horizontal')
-                    cbar.set_label(self.opMagLabels[e])
-                    angleSign = 1 if event.inaxes == imOrigAbs.axes else -1
-                    imPhase = axPhase.imshow(angleSign * np.angle(opMatrix), cmap='hsv', extent=[self.bMin, self.bMin+1, self.bMin, self.bMin+1])
-                    imPhase.set_norm(colors.Normalize(vmin=-np.pi, vmax=np.pi))
-                    cbar = popupFig.colorbar(imPhase, ax=axPhase, orientation='horizontal')
-                    cbar.set_label(self.opPhaseLabels[e])
+                    if np.max(np.abs(np.imag(opMatrix))) < 1e-5 * np.max(np.abs(np.real(opMatrix))):
+                        popupFig, axReal = plt.subplots(1, 1, figsize=(4.5, 4.5))
+                        imReal = axReal.imshow(np.real(opMatrix), extent=[self.bMin, self.bMin+1, self.bMin, self.bMin+1])
+                        cbar = popupFig.colorbar(imReal, ax=axReal, orientation='horizontal')
+                        cbar.set_label(self.opLabels[e])
+                        axL = [axReal]
+                        invPhaseComment = ""
+                    else:
+                        popupFig, (axAbs, axPhase)  = plt.subplots(1, 2, figsize=(7, 4.5))
+                        imAbs = axAbs.imshow(np.abs(opMatrix), extent=[self.bMin, self.bMin+1, self.bMin, self.bMin+1])
+                        cbar = popupFig.colorbar(imAbs, ax=axAbs, orientation='horizontal')
+                        cbar.set_label(self.opMagLabels[e])
+                        angleSign = 1 if event.inaxes == imOrigAbs.axes else -1
+                        imPhase = axPhase.imshow(angleSign * np.angle(opMatrix), cmap='hsv', extent=[self.bMin, self.bMin+1, self.bMin, self.bMin+1])
+                        imPhase.set_norm(colors.Normalize(vmin=-np.pi, vmax=np.pi))
+                        cbar = popupFig.colorbar(imPhase, ax=axPhase, orientation='horizontal')
+                        cbar.set_label(self.opPhaseLabels[e])
+                        invPhaseComment = ", Phase inverted" if angleSign == -1 else ""
+                        axL = [ axAbs, axPhase]
 
                     d1, d2 = self.sliceDirs[self.sliceDir]
-                    for ax in [axAbs, axPhase]:
+                    for ax in axL:
                         ax.set_ylabel(r"$b_{{{}}}$".format(d1))
                         ax.set_xlabel(r"$b_{{{}}}$".format(d2))
-
                     n = self.inverseWanIndex[int(self.slider_n.val)]
                     m = self.inverseWanIndex[int(self.slider_m.val)]
-                    invPhaseComment = ", Phase inverted" if angleSign == -1 else ""
                     popupFig.suptitle(f"m={m}, n={n}, b{e}={round(self.slider_Nk.val, 4)}" + invPhaseComment)
                     popupFig.tight_layout()
                     plt.show()
@@ -194,10 +203,12 @@ class GUI_2D:
         wanIndices = data['WanIndices']
         if showMode == "Dk":
             self.operators = np.stack((data['H0'], data['Dkx'], data['Dky']))
+            self.opLabels = [ r"$H$ [a.u.]", r"$D_x$ [a.u.]", r"$D_y$ [a.u.]"]
             self.opMagLabels = [ r"$|H|$ [a.u.]", r"$|D_x|$ [a.u.]", r"$|D_y|$ [a.u.]"]
             self.opPhaseLabels = [ r"$\arg(H)$", r"$\arg(D_x)$", r"$\arg(D_y)$"]
         elif showMode == "dHdk":
             self.operators = np.stack((data['H0'], data['dHdkx'], data['dHdky']))
+            self.opLabels = [ r"$H$ [a.u.]", r"$\frac{dH}{k_x}$ [a.u.]", r"$\frac{dH}{k_y}$ [a.u.]"]
             self.opMagLabels = [ r"$|H|$ [a.u.]", r"$|\frac{dH}{k_x}|$ [a.u.]", r"$|\frac{dH}{k_y}|$ [a.u.]"]
             self.opPhaseLabels = [ r"$\arg(H)$", r"$\arg(\frac{dH}{k_x})$", r"$\arg(\frac{dH}{k_y})$"]
         else:
@@ -206,13 +217,20 @@ class GUI_2D:
         self.Nk1 = self.operators.shape[1]
         self.Nk2 = self.operators.shape[2]
 
+        self.kx = data['kMesh'][...,0,0]
+        self.ky = data['kMesh'][...,0,1]
+
         # shifting of the reference frame
         self.bMin = -0.5
         if not ((self.bMin * self.Nk1).is_integer() and (self.bMin * self.Nk2).is_integer()):
             self.bMin = 0.0
+        r1, r2 = [round(self.bMin*Nk) for Nk in [self.Nk1, self.Nk2]]
         self.operators = np.roll(self.operators,
-                                 (round(self.bMin*self.Nk1), round(self.bMin * self.Nk2)), (1, 2))
+                                 (round(r1), round(r1)), (1, 2))
+        self.kx -= self.kx[r1, r2]
+        self.kx -= self.kx[r1, r2]
 
+        self.kAspectRatio = (np.max(self.ky) - np.min(self.ky)) / ( np.max(self.kx) - np.min(self.kx) )
 
         self.fig, self.ax = plt.subplots(2, 3, figsize=(10, 10))
         self.fig.subplots_adjust(bottom=0.15, left=0.08, right=0.98, top=0.98, wspace=0.35, hspace=0)
@@ -236,32 +254,33 @@ class GUI_2D:
     def getSlicedOps(self):
         n = self.inverseWanIndex[int(self.slider_n.val)]
         m = self.inverseWanIndex[int(self.slider_m.val)]
-        return self.operators[..., m, n]
+        return self.operators[...,0, m, n]
 
     def initImgs(self):
         self.ims = []
         slicedOps = self.getSlicedOps()
         for e, (axAbs, axPhase) in enumerate(self.ax.T):
             norm = colors.Normalize(vmin=0, vmax=np.max(np.abs(slicedOps[e])))
-            imAbs = axAbs.imshow(np.abs(slicedOps[e]), extent=[self.bMin, self.bMin+1, self.bMin, self.bMin+1])
+            imAbs = axAbs.pcolormesh(self.kx, self.ky, np.abs(slicedOps[e]), shading='gouraud')
             imAbs.set_norm(norm)
             cbar = self.fig.colorbar(imAbs, ax=axAbs, orientation='horizontal')
             cbar.set_label(self.opMagLabels[e])
-            imPhase = axPhase.imshow(np.angle(slicedOps[e]), cmap='hsv', extent=[self.bMin, self.bMin+1, self.bMin, self.bMin+1])
+            imPhase = axPhase.pcolormesh(self.kx, self.ky, np.angle(slicedOps[e]), cmap='hsv')
             imPhase.set_norm(colors.Normalize(vmin=-np.pi, vmax=np.pi))
             cbar = self.fig.colorbar(imPhase, ax=axPhase, orientation='horizontal')
             cbar.set_label(self.opPhaseLabels[e])
             self.ims.append([imAbs, imPhase])
         for ax in self.ax.flat:
-            ax.set_ylabel(r"$b_1$")
-            ax.set_xlabel(r"$b_2$")
+            ax.set_xlabel(r"$k_x$")
+            ax.set_ylabel(r"$k_y$")
+            ax.set_box_aspect(self.kAspectRatio)
 
     def updateImgs(self, event):
         slicedOps = self.getSlicedOps()
         for e, [imAbs, imPhase] in enumerate(self.ims):
             imAbs.set_clim(vmin=0, vmax=np.max(np.abs(slicedOps[e])))
-            imAbs.set_data(np.abs(slicedOps[e]))
-            imPhase.set_data(np.angle(slicedOps[e]))
+            imAbs.set_array(np.abs(slicedOps[e]))
+            imPhase.set_array(np.angle(slicedOps[e]))
 
     def setTitle(self, title):
         self.fig.canvas.manager.set_window_title(title)
@@ -271,22 +290,31 @@ class GUI_2D:
             for e, [imOrigAbs, imOrigPhase] in enumerate(self.ims):
                 if event.inaxes in [imOrigAbs.axes, imOrigPhase.axes]:
                     opMatrix = self.getSlicedOps()[e, :, :]
-                    popupFig, (axAbs, axPhase)  = plt.subplots(1, 2, figsize=(7, 4.5))
-                    imAbs = axAbs.imshow(np.abs(opMatrix), extent=[self.bMin, self.bMin+1, self.bMin, self.bMin+1])
-                    cbar =  popupFig.colorbar(imAbs, ax=axAbs, orientation='horizontal')
-                    cbar.set_label(self.opMagLabels[e])
-                    angleSign = 1 if event.inaxes == imOrigAbs.axes else -1
-                    imPhase = axPhase.imshow(angleSign * np.angle(opMatrix), cmap='hsv', extent=[self.bMin, self.bMin+1, self.bMin, self.bMin+1])
-                    imPhase.set_norm(colors.Normalize(vmin=-np.pi, vmax=np.pi))
-                    cbar = popupFig.colorbar(imPhase, ax=axPhase, orientation='horizontal')
-                    cbar.set_label(self.opPhaseLabels[e])
-                    for ax in [axAbs, axPhase]:
-                        ax.set_ylabel(r"$b_1$")
-                        ax.set_xlabel(r"$b_2$")
-
+                    if np.max(np.abs(np.imag(opMatrix))) < 1e-5 * np.max(np.abs(np.real(opMatrix))):
+                        popupFig, axReal = plt.subplots(1, 1, figsize=(4.5, 4.5))
+                        imReal = axReal.pcolormesh(self.kx, self.ky, np.real(opMatrix))
+                        cbar = popupFig.colorbar(imReal, ax=axReal, orientation='horizontal')
+                        cbar.set_label(self.opLabels[e])
+                        invPhaseComment = ""
+                        axL = [axReal]
+                    else:
+                        popupFig, (axAbs, axPhase)  = plt.subplots(1, 2, figsize=(7, 4.5))
+                        imAbs = axAbs.pcolormesh(self.kx, self.ky, np.abs(opMatrix))
+                        cbar = popupFig.colorbar(imAbs, ax=axAbs, orientation='horizontal')
+                        cbar.set_label(self.opMagLabels[e])
+                        angleSign = 1 if event.inaxes == imOrigAbs.axes else -1
+                        imPhase = axPhase.pcolormesh(self.kx, self.ky, angleSign * np.angle(opMatrix), cmap='hsv')
+                        imPhase.set_norm(colors.Normalize(vmin=-np.pi, vmax=np.pi))
+                        cbar = popupFig.colorbar(imPhase, ax=axPhase, orientation='horizontal')
+                        cbar.set_label(self.opPhaseLabels[e])
+                        axL = [axAbs, axPhase]
+                        invPhaseComment = ", Phase inverted" if angleSign == -1 else ""
+                    for ax in axL:
+                        ax.set_xlabel(r"$k_x$")
+                        ax.set_ylabel(r"$k_y$")
+                        ax.set_box_aspect(self.kAspectRatio)
                     n = self.inverseWanIndex[int(self.slider_n.val)]
                     m = self.inverseWanIndex[int(self.slider_m.val)]
-                    invPhaseComment = ", Phase inverted" if angleSign == -1 else ""
                     popupFig.suptitle(f"m={m}, n={n}" + invPhaseComment)
                     popupFig.tight_layout()
                     plt.show()
@@ -309,7 +337,7 @@ class GUI_1D:
         self.Nk = self.operators.shape[1]
 
         # shifting of the reference frame
-        self.bMin = -0.5
+        self.bMin = 0.5
         if not (self.bMin * self.Nk).is_integer():
             self.bMin = 0.0
         self.operators = np.roll(self.operators,round(self.bMin*self.Nk), 1)
@@ -388,24 +416,30 @@ class GUI_1D:
         self.fig.canvas.manager.set_window_title(title)
 
 
+def transformToBloch(data):
+    res = {}
+    E, U = np.linalg.eigh(data['H0'])
+    res['WanIndices'] = data['WanIndices']
+    res['lattice'] = data['lattice']
+    res['kMesh'] = data['kMesh']
+    res['H0'] = np.einsum("xyzba,xyzbc,xyzcd->xyzad", np.conj(U), data['H0'], U)
+    for d in 'xyz':
+        if not "Dk"+d in data:
+            continue
+        D = data['Dk'+d]
+        dH = data['dHdk'+d]
+        D_unitary = np.einsum("xyzba,xyzbc,xyzcd->xyzad", np.conj(U), D, U)
+        with np.errstate(divide='ignore'):
+            D_deriv = np.einsum("xyzba,xyzbc,xyzcd,xyzad->xyzad", np.conj(U), dH, U, 1/(E[...,None,:]-E[...,None]))
+        # we take the magnitude here as the phases not defined
+        res['Dk'+d] = np.abs(D_unitary + 1j * D_deriv)
+        dHh = np.zeros(np.shape(dH), dtype=complex)
+        np.einsum("xyzaa->xyza", dHh)[:] = np.einsum("xyzba,xyzbc,xyzca->xyza", np.conj(U), dH, U)
+        res['dHdk'+d] = dHh
+    return res
 
 
-def showTransform(fname, title):
-    data = np.load(fname)
-    if 'dHdkx' in data and 'Dkx' in data:
-        print("Found dHdk (0) and dipole (1) select via number:")
-        while mode:=input():
-            if mode == "0":
-                showMode = "dHdk"
-                break
-            if mode == "1":
-                showMode = "Dk"
-                break
-    else:
-        showMode = "Dk" if 'Dkx' in data else "dHdk"
-    if not 'dHdkx' in data and not 'Dkx' in data:
-        print("Could neither find Dk nor dHdk")
-        return
+def showTransform(data, showMode, title):
     if 'Dkz' in data or 'dHdz' in data:
         m = GUI_3D(data, showMode)
     elif 'Dky' in data or 'dHdy' in data:
@@ -414,6 +448,7 @@ def showTransform(fname, title):
         m = GUI_1D(data, showMode)
     m.setTitle(title)
     plt.show()
+
 
 def setupParser(allowedTypes):
     parser = argparse.ArgumentParser(
@@ -425,33 +460,61 @@ def setupParser(allowedTypes):
                                         selected according to the specified type''')
     parser.add_argument('-t', '--type', choices=allowedTypes, default=allowedTypes[0],
                         help='defines the npz to load')
+    parser.add_argument('-d', '--dHdk', action='store_true',
+                        help='''show k-derivative of Hamiltonian instead of dipole maxtrix elements.
+                                The dipole matrix elements within the same (energetical) subspace are not well defined'
+                             ''')
+    parser.add_argument('-H', '--Hamiltonian', action='store_true', help='show operators in Bloch basis',
+                        dest='transformToBlochBasis')
     return parser
 
 
-if __name__ == "__main__":
-    typeMap = { 'fft': 'trafoFFT.npz', 'direct' : 'trafoDirect.npz', 'python' : 'trafoPython.npz',
-               'directF' : 'trafoDirectFull.npz', 'fftF' : 'trafoFFTfull.npz',
-                'c' : 'trafoCuda.npz', 'cf' : 'trafoCudaFull.npz' }
-    parser = setupParser(list(typeMap))
-    args = parser.parse_args()
+def main(args):
     if os.path.isfile(args.path):
-        showTransform(args.path, args.path)
+       fname = args.path
+       title = args.path
+       inputDict = {}
     else:
         paths = runParsing.findMatchingLatestRunPaths(args.path)
         if len(paths) == 0:
             print("No matching file found")
-        else:
-            fname = os.path.join(paths[0], typeMap[args.type])
+            return
+        fname = os.path.join(paths[0], typeMap[args.type])
+        if not os.path.exists(fname):
+            print(f"'{fname}' not found")
+            for key, fn in typeMap.items():
+                fname = os.path.join(paths[0], fn)
+                if os.path.exists(fname):
+                    print(f"selected '{fname}' instead")
+                    break
             if not os.path.exists(fname):
-                print(f"'{fname}' not found")
-                for key, fn in typeMap.items():
-                    fname = os.path.join(paths[0], fn)
-                    if os.path.exists(fname):
-                        print(f"selected '{fname}' instead")
-                        break
-                if not os.path.exists(fname):
-                    print("No matching file found")
-                    exit(0)
-            inputDict = runParsing.parseInputDirectory(paths[0])
-            title = f"{args.type} -- WannierSeed: {inputDict['TightBinding.wannierSeed']}"
-            showTransform(fname, title)
+                print("No matching file found")
+                return
+        inputDict = runParsing.parseInputDirectory(paths[0])
+        title = f"{args.type} -- WannierSeed: {inputDict['TightBinding.wannierSeed']}"
+    data = np.load(fname)
+    showMode = "dHdk" if args.dHdk else "Dk"
+    if not showMode+"x" in data:
+        print(f"{showMode} not present in '{fname}'")
+        return
+    if args.transformToBlochBasis:
+        if not "dHdkx" in data:
+            print("Requires dHdk to calculate basis transform")
+            return
+        if len(inputDict) == 0 or 'FourierTransform.saveIndices' in inputDict:
+            print("WARNING: I may use incomplete Wannier matrices for diagonalization")
+        data = transformToBloch(data)
+        title += " (Bloch basis)"
+    else:
+        title += " (Wannier basis)"
+    showTransform(data, showMode, title)
+
+
+if __name__ == "__main__":
+    typeMap = { 'fftF' : 'trafoFFTfull.npz','fft': 'trafoFFT.npz',
+                'direct' : 'trafoDirect.npz', 'python' : 'trafoPython.npz',
+                'directF' : 'trafoDirectFull.npz',
+                'c' : 'trafoCuda.npz', 'cf' : 'trafoCudaFull.npz' }
+    parser = setupParser(list(typeMap))
+    args = parser.parse_args()
+    main(args)
