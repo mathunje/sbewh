@@ -191,11 +191,7 @@ bool saveSBEresults_npz(const ExpectationValues_t &ev, const Parameter_t &param,
     cnpy::npz_save(fname, "t", ev.t.data(), {Nt}, "w");
     cnpy::npz_save(fname, "pulse/E", ev.E[0].data(), {Nt, 3}, "a");
     cnpy::npz_save(fname, "pulse/A", ev.A[0].data(), {Nt, 3}, "a");
-    double lattice[3][3];
-    for(unsigned i=0; i<3; i++)
-        for(unsigned j=0; j<3; j++)
-            lattice[i][j] = param.tb.latticeVectors[i].at(j);
-    cnpy::npz_save(fname, "lattice", &(lattice[0][0]), {3, 3}, "a");
+    cnpy::npz_save(fname, "lattice", unravel(param.tb.latticeVectors).data(), {3, 3}, "a");
     cnpy::npz_save(fname, "occHamMin", ev.occupationHamMin.data(), {Nt, numWann}, "a");
     cnpy::npz_save(fname, "occHamMax", ev.occupationHamMax.data(), {Nt, numWann}, "a");
     if ( param.ksr.storeDensityMatrix )

@@ -6,6 +6,7 @@ void FourierTransformParameter_t::print(FILE *f, unsigned dim) const
 {
     fprintf(f, "Fouriertransform parameter\n");
     fprintf(f, "\tperform direct calculation: %d\n", int(performDirectCalculation));
+    fprintf(f, "\tHamiltonian with test field: %d\n", int(whTransformTestField));
     for(unsigned d=0; d<dim; d++)
         fprintf(f, "\tNf%u: %u\n", d+1, Nf[d]);
     std::string pm = FourierTransformParameterValidator::planningFlagToStr(fftwPlanningFlag);
@@ -32,6 +33,9 @@ FourierTransformParameterValidator::FourierTransformParameterValidator(Parameter
     paramIO.startGroup("FourierTransform", "Control usage of FFTs for calculation of Hamiltonian and dipole matrix elements");
     paramIO.registerParam(new ParameterBool("performDirectCalculation",
                 "if set, the Fourier transform is evalualuated via direct sum for comparison, too.", performDirectCalculation, false));
+    paramIO.registerParam(new ParameterBool("whTransformTestField",
+                "if set, the dipole matrix elements are obtained from full Hamiltonian via a test field\n"
+                "\tin WHtransform mode. Mainly used for debugging.", whTransformTestField, false));
     paramIO.registerParam(new ParameterVector<unsigned>("saveIndices",
                 "defines submatrix for which H and D are saved in WHtransform run mode (0-indexed).\n"
                 "\tIf this parameter is not set, all matrix elements will be written\n"
@@ -53,6 +57,7 @@ FourierTransformParameterValidator::FourierTransformParameterValidator(Parameter
 bool FourierTransformParameterValidator::update(FourierTransformParameter_t *p, const TightBindingParameter_t &tb, unsigned dim)
 {
     p->performDirectCalculation = performDirectCalculation;
+    p->whTransformTestField = whTransformTestField;
     if ( saveIndices.size() == 0){
         for(unsigned i=0; i<tb.numWann; i++)
             saveIndices.push_back(i);
@@ -107,6 +112,7 @@ std::string FourierTransformParameterValidator::planningFlagToStr(unsigned flag)
 void mpi_bcast_FourierTransformParameter(FourierTransformParameter_t &p, const MpiParameter_t &mp)
 {
     mpi_bcast_trivial(p.performDirectCalculation, mp);
+    mpi_bcast_trivial(p.whTransformTestField, mp);
     mpi_bcast_trivial(p.saveIndices, mp);
     mpi_bcast_trivial(p.Nf, mp);
     mpi_bcast_trivial(p.maxNfPrime, mp);

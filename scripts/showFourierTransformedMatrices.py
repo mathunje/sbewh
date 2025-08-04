@@ -17,7 +17,7 @@ class GUI_3D:
     def __init__(self, data, showMode):
         wanIndices = data['WanIndices']
         if showMode == "Dk":
-            self.operators = np.stack((data['H0'], data['Dxk'], data['Dyk'], data['Dzk']))
+            self.operators = np.stack((data['H0'], data['Dkx'], data['Dky'], data['Dkz']))
             self.opMagLabels = [ r"$|H|$ [a.u.]", r"$|D_x|$ [a.u.]", r"$|D_y|$ [a.u.]", r"$|D_z|$ [a.u.]"]
             self.opPhaseLabels = [ r"$\arg(H)$", r"$\arg(D_x)$", r"$\arg(D_y)$", r"$\arg(D_z)$"]
         elif showMode == "dHdk":
@@ -193,7 +193,7 @@ class GUI_2D:
     def __init__(self, data, showMode):
         wanIndices = data['WanIndices']
         if showMode == "Dk":
-            self.operators = np.stack((data['H0'], data['Dxk'], data['Dyk']))
+            self.operators = np.stack((data['H0'], data['Dkx'], data['Dky']))
             self.opMagLabels = [ r"$|H|$ [a.u.]", r"$|D_x|$ [a.u.]", r"$|D_y|$ [a.u.]"]
             self.opPhaseLabels = [ r"$\arg(H)$", r"$\arg(D_x)$", r"$\arg(D_y)$"]
         elif showMode == "dHdk":
@@ -296,7 +296,7 @@ class GUI_1D:
     def __init__(self, data, showMode):
         self.wanIndices = data['WanIndices']
         if showMode == "Dk":
-            self.operators = np.stack((data['H0'], data['Dxk']))
+            self.operators = np.stack((data['H0'], data['Dkx']))
             self.opMagLabels = [ r"$|H|$ [a.u.]", r"$|D_x|$ [a.u.]"]
             self.opPhaseLabels = [ r"$\arg(H)$", r"$\arg(D_x)$"]
         elif showMode == "dHdk":
@@ -392,7 +392,7 @@ class GUI_1D:
 
 def showTransform(fname, title):
     data = np.load(fname)
-    if 'dHdkx' in data and 'Dxk' in data:
+    if 'dHdkx' in data and 'Dkx' in data:
         print("Found dHdk (0) and dipole (1) select via number:")
         while mode:=input():
             if mode == "0":
@@ -402,13 +402,13 @@ def showTransform(fname, title):
                 showMode = "Dk"
                 break
     else:
-        showMode = "Dk" if 'Dxk' in data else "dHdk"
-    if not 'dHdkx' in data and not 'Dxk' in data:
+        showMode = "Dk" if 'Dkx' in data else "dHdk"
+    if not 'dHdkx' in data and not 'Dkx' in data:
         print("Could neither find Dk nor dHdk")
         return
-    if 'Dzk' in data or 'dHdz' in data:
+    if 'Dkz' in data or 'dHdz' in data:
         m = GUI_3D(data, showMode)
-    elif 'Dyk' in data or 'dHdy' in data:
+    elif 'Dky' in data or 'dHdy' in data:
         m = GUI_2D(data, showMode)
     else:
         m = GUI_1D(data, showMode)

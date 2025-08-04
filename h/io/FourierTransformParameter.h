@@ -17,6 +17,7 @@
 
 struct FourierTransformParameter_t{
     bool performDirectCalculation;
+    bool whTransformTestField;;
     std::vector<unsigned> saveIndices;
     std::array<unsigned, 3> Nf;
     unsigned maxNfPrime;
@@ -28,6 +29,7 @@ struct FourierTransformParameter_t{
 class FourierTransformParameterValidator{
 private:
     bool performDirectCalculation;
+    bool whTransformTestField;
     std::vector<unsigned> saveIndices;
     std::vector<unsigned> Nf;
     unsigned maxNfPrime;

@@ -37,7 +37,7 @@ _sbewh_completions()
         -Diagonalization)
             COMPREPLY=( $(compgen -W "-Diagonalization.maxRelError -Diagonalization.maxSweepCount -Diagonalization.mode" -- $cword) );;
         -FourierTransform)
-            COMPREPLY=( $(compgen -W "-FourierTransform.Nf -FourierTransform.fftPlanningMode -FourierTransform.maxNfPrime -FourierTransform.performDirectCalculation -FourierTransform.planningTimeLimit -FourierTransform.saveIndices" -- $cword) );;
+            COMPREPLY=( $(compgen -W "-FourierTransform.Nf -FourierTransform.fftPlanningMode -FourierTransform.maxNfPrime -FourierTransform.performDirectCalculation -FourierTransform.planningTimeLimit -FourierTransform.saveIndices -FourierTransform.whTransformTestField" -- $cword) );;
         -General)
             COMPREPLY=( $(compgen -W "-General.dimensionality -General.dryRun -General.finishMultiRuns -General.runMode -General.timeIt -General.verbose -General.veryVerbose" -- $cword) );;
         -KspaceRegions)

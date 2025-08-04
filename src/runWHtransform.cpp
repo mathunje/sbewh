@@ -73,9 +73,10 @@ void saveWHtransform(std::string tag, const std::vector<GeomVector<double, 3>> &
     std::filesystem::path p(param.out.saveDir);
     std::string fname = std::string(p / tag) + ".npz";
     cnpy::npz_save(fname, "WanIndices", &param.ft.saveIndices[0], {siSize}, "w");
+    cnpy::npz_save(fname, "lattice", unravel(param.tb.latticeVectors).data(), {3, 3}, "a");
     cnpy::npz_save(fname, "kMesh", (double*)&kMesh[0], {param.prop.Nk[0], param.prop.Nk[1], param.prop.Nk[2], 3}, "a");
     cnpy::npz_save(fname, "H0", HkOps[0].data(), {param.prop.Nk[0], param.prop.Nk[1], param.prop.Nk[2], siSize, siSize}, "a");
-    std::string Ename[3] = { "Dxk", "Dyk", "Dzk" };
+    std::string Ename[3] = { "Dkx", "Dky", "Dkz" };
     for(unsigned dir=0; dir<param.general.dim; dir++){
         cnpy::npz_save(fname, Ename[dir], HkOps[1+dir].data(),
                 {param.prop.Nk[0], param.prop.Nk[1], param.prop.Nk[2], siSize, siSize}, "a");
@@ -99,8 +100,8 @@ int runWHtransformCPU(Parameter_t &param){
     std::vector< std::complex<double> > HkOps[7];
     GeomVector3d E[3] = { {1, 0, 0}, {0, 1, 0}, {0, 0, 1} }; // test electric field
 
-    if (param.ft.performDirectCalculation){
-        Logger::verbose("Start full direct calculation\n");
+    if (param.ft.performDirectCalculation ){
+        Logger::verbose("Start full Hamiltonian direct calculation\n");
         HkFullVec Hkf = wft.transformMeshDirect(offset);
         Logger::verbose("Full direct calculation finished\n");
         HkOps[0] = extractFullH0(param, Nk, Hkf);
@@ -109,16 +110,18 @@ int runWHtransformCPU(Parameter_t &param){
         if ( ! param.out.disableSaving )
             saveWHtransform("trafoDirectFull", kMesh, HkOps, param);
 
-        for(unsigned dir=0; dir<param.general.dim; dir++){
-            Logger::verbose("Starting direct calculation for direction %u\n", dir+1);
-            HkVec Hk = wft.transformMeshDirect(offset, E[dir]);
-            Logger::verbose("Direct calculation finished\n");
-            if ( dir == 0 )
-                HkOps[0] = extractH0(param, Nk, Hk);
-            HkOps[1+dir] = extractD(param, Nk, Hk);
+        if ( param.ft.whTransformTestField ){
+            for(unsigned dir=0; dir<param.general.dim; dir++){
+                Logger::verbose("Starting direct calculation for direction %u\n", dir+1);
+                HkVec Hk = wft.transformMeshDirect(offset, E[dir]);
+                Logger::verbose("Direct calculation finished\n");
+                if ( dir == 0 )
+                    HkOps[0] = extractH0(param, Nk, Hk);
+                HkOps[1+dir] = extractD(param, Nk, Hk);
+            }
+            if ( ! param.out.disableSaving )
+                saveWHtransform("trafoDirect", kMesh, HkOps, param);
         }
-        if ( ! param.out.disableSaving )
-            saveWHtransform("trafoDirect", kMesh, HkOps, param);
     }
 
     const auto &shifts = wft.getFineMeshFracShifts(offset);
@@ -127,32 +130,33 @@ int runWHtransformCPU(Parameter_t &param){
         Logger::error("Could not plan FFT\n");
         return 1;
     }
-    HkVec fftOps = wft.createHkVec();
     HkFullVec fftFullOps = wft.createHkFullVec();
     Logger::verbose("Start full FFT calculation\n");
     wft.transformMeshFFT(fftFullOps, shifts);
     Logger::verbose("Full FFT calculation finished\n");
-    if ( ! param.out.disableSaving ){
-        HkFullVec Hkf = wft.unravelFFTfullMesh(fftFullOps);
-        HkOps[0] = extractFullH0(param, Nk, Hkf);
-        for(unsigned dir=0; dir<param.general.dim; dir++)
-            HkOps[1+dir] = extractFullD(param, Nk, Hkf, dir);
-        for(unsigned dir=0; dir<param.general.dim; dir++)
-            HkOps[4+dir] = extractFulldH0dk(param, Nk, Hkf, dir);
-        saveWHtransform("trafoFFTfull", kMesh, HkOps, param, true);
-    }
-
-    for(unsigned dir=0; dir<param.general.dim; dir++){
-        Logger::verbose("Starting FFT calculation for direction %u\n", dir+1);
-        wft.transformMeshFFT(fftOps, shifts, E[dir]);
-        Logger::verbose("FFT calculation finished\n");
-        HkVec Hk = wft.unravelFFTmesh(fftOps);
-        if ( dir == 0 )
-            HkOps[0] = extractH0(param, Nk, Hk);
-        HkOps[1+dir] = extractD(param, Nk, Hk);
-    }
+    HkFullVec Hkf = wft.unravelFFTfullMesh(fftFullOps);
+    HkOps[0] = extractFullH0(param, Nk, Hkf);
+    for(unsigned dir=0; dir<param.general.dim; dir++)
+        HkOps[1+dir] = extractFullD(param, Nk, Hkf, dir);
+    for(unsigned dir=0; dir<param.general.dim; dir++)
+        HkOps[4+dir] = extractFulldH0dk(param, Nk, Hkf, dir);
     if ( ! param.out.disableSaving )
-            saveWHtransform("trafoFFT", kMesh, HkOps, param);
+        saveWHtransform("trafoFFTfull", kMesh, HkOps, param, true);
+
+    if ( param.ft.whTransformTestField ) {
+        HkVec fftOps = wft.createHkVec();
+        for(unsigned dir=0; dir<param.general.dim; dir++){
+            Logger::verbose("Starting FFT calculation for direction %u\n", dir+1);
+            wft.transformMeshFFT(fftOps, shifts, E[dir]);
+            Logger::verbose("FFT calculation finished\n");
+            HkVec Hk = wft.unravelFFTmesh(fftOps);
+            if ( dir == 0 )
+                HkOps[0] = extractH0(param, Nk, Hk);
+            HkOps[1+dir] = extractD(param, Nk, Hk);
+        }
+        if ( ! param.out.disableSaving )
+               saveWHtransform("trafoFFT", kMesh, HkOps, param);
+    }
     return 0;
 }
 
@@ -189,7 +193,7 @@ int runWHtransformGPU(Parameter_t &param){
             saveWHtransform("trafoCudaFull", kMesh, HkOps, param, true);
         }
     }
-    {
+    if ( param.ft.whTransformTestField ){
         Logger::verbose("Hk transform\n");
         CuWhFourierTransformHk wft(stream, param.tb, param.ft, param.prop.Noffset);
         cuDoubleComplex * d_HkOps = wft.createDataVec();
