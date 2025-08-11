@@ -37,7 +37,7 @@ void Logger::helloWorld(const char *name, const char *gitHash, int boxWidth)
 void Logger::printTime()
 {
     const auto now = std::chrono::steady_clock::now();
-    unsigned long ms = (std::chrono::duration_cast<std::chrono::milliseconds>(now - startTime)).count() / 2;
+    unsigned long ms = (std::chrono::duration_cast<std::chrono::milliseconds>(now - startTime)).count();
     unsigned long s = ms / 1000;
     unsigned long min = s / 60;
     unsigned long h = min / 60;
