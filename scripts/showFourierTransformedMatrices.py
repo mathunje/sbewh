@@ -271,8 +271,8 @@ class GUI_2D:
             cbar.set_label(self.opPhaseLabels[e])
             self.ims.append([imAbs, imPhase])
         for ax in self.ax.flat:
-            ax.set_xlabel(r"$k_x$")
-            ax.set_ylabel(r"$k_y$")
+            ax.set_xlabel(r"$k_x$ [a.u.]")
+            ax.set_ylabel(r"$k_y$ [a.u.]")
             ax.set_box_aspect(self.kAspectRatio)
 
     def updateImgs(self, event):
@@ -310,8 +310,8 @@ class GUI_2D:
                         axL = [axAbs, axPhase]
                         invPhaseComment = ", Phase inverted" if angleSign == -1 else ""
                     for ax in axL:
-                        ax.set_xlabel(r"$k_x$")
-                        ax.set_ylabel(r"$k_y$")
+                        ax.set_xlabel(r"$k_x$ [a.u.]")
+                        ax.set_ylabel(r"$k_y$ [a.u.]")
                         ax.set_box_aspect(self.kAspectRatio)
                     n = self.inverseWanIndex[int(self.slider_n.val)]
                     m = self.inverseWanIndex[int(self.slider_m.val)]

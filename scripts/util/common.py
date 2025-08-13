@@ -30,6 +30,8 @@ def loadPlotOptionsDict(fname, subGroups, verbose=False):
         print(f"Seaching plot options at {fname}")
     if os.path.exists(fname):
         return parse(fname)
+    if isinstance(subGroups, list):
+        return len(subGroups) * [ {} ]
     return {}
 
 """ Parses the data in a runDir. Automatically decides if average file

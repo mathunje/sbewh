@@ -62,7 +62,6 @@ def showDensityMatrix(data, region, plotOptions):
     imPhase.set_norm(colors.Normalize(vmin=-np.pi, vmax=np.pi))
     cbar = fig.colorbar(imPhase, ax=axPhase, orientation='horizontal')
     cbar.set_label("Phase")
-    fig.tight_layout()
 
     def getDescription(tIndex, rIndices):
         kToStr = lambda k : "["+ ", ".join([f"{v:.3f}" for v in k]) + "]"
@@ -111,8 +110,8 @@ def main(searchPath, kRegionName, regionIndices, subRun, plotOptionFname):
 
 def createParser():
     parser = argparse.ArgumentParser(
-                        description="""XXXXXXXXXXXX""",
-                        epilog="from MT")
+                        description="""Visualization of the density matrix elements based on interactive sliders""",
+                        epilog="from M.T.")
     parser.add_argument('searchPath', help='search path')
     parser.add_argument('kRegionName', help='kSpaceRegions in input file', nargs='?', default=None)
     parser.add_argument('-r', '--regionIndices', help='indices of region sample to specific instance', type=common.parseIndexList, default=[])

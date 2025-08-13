@@ -26,9 +26,10 @@ def showHHG(data, region, inputVars, spectrumCalculator, plotOpts, saveBaseName)
     t = data["t"]
     t_fs = atu.to_fs(t)
     fig = plt.figure(figsize=(12, 8))
-    gs = gs = GridSpec(2, 2)
+    gs = GridSpec(2, 2)
     axPulse = fig.add_subplot(gs[0, 0])
     axJ = fig.add_subplot(gs[0, 1])
+    gsOccMain = gs[1, 0]
     axHHG = fig.add_subplot(gs[1:, 1])
     fig.canvas.manager.set_window_title(region.description())
     j = expv["j"]
@@ -127,9 +128,9 @@ def showHHG(data, region, inputVars, spectrumCalculator, plotOpts, saveBaseName)
     occGlobal = sorted( [ s for s in filter(lambda s : s.startswith("occ") and not "/" in s, data.keys()) ] )
     occTypes = sorted( [ s for s in filter(lambda s : s.startswith("occ"), expv.keys()) ] )
     occCount = len(occTypes) + len(occGlobal)
+    gsOcc = gsOccMain.subgridspec(3, occCount, height_ratios=[0.3, 1, 1], wspace=0, hspace=0.05)
 
     if occCount > 0:
-        gsOcc = gs[1, 0].subgridspec(3, occCount, height_ratios=[0.3, 1, 1], wspace=0, hspace=0.05)
         axOcc = fig.add_subplot(gsOcc[1:, :])
         axOccBottom = fig.add_subplot(gsOcc[2, :])
         axOccTop = fig.add_subplot(gsOcc[1, : ], sharex=axOccBottom)
@@ -144,8 +145,6 @@ def showHHG(data, region, inputVars, spectrumCalculator, plotOpts, saveBaseName)
             typeButtons.append(btn)
         showOcc( inpvars )
 
-
-    # warnings.filterwarnings('ignore', module="plotting")
     plotting.addInputVarTools(fig, inputVars, cropNamesAt=4)
     fig.subplots_adjust(left=0.12)
     plt.show()
@@ -205,7 +204,6 @@ def showAbsorption(data, region, inputVars, spectrumCalculator, plotOpts, saveBa
     ax[2].set_ylabel("absorption [arb. u.]")
 
     plotting.addInputVarTools(fig, inputVars)
-    fig.tight_layout()
     plt.show()
 
 
