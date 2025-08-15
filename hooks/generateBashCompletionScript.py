@@ -79,7 +79,7 @@ _sbewh_completions()
     fi
 }
 
-complete -F _sbewh_completions -o nospace ./sbewh"""
+complete -F _sbewh_completions -o nospace sbewh"""
     print(script)
 
 

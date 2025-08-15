@@ -23,6 +23,7 @@
             devShell.x86_64-linux = 
                 pkgs.mkShell (pkgs.mkShell.override { stdenv = pkgs.cudaPackages.backendStdenv; }) {
                     buildInputs = [ 
+                           pkgs.bash-completion
                            pkgs.mpi
                            pkgs.ffmpeg-full
                            pkgs.cudaPackages.cuda_cudart

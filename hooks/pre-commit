@@ -20,22 +20,15 @@ fi
 
 repoDir=$(pwd)
 
-
-if [ ! -e test/build ]; then
-    mkdir test/build
-fi
-
-
-
-
 #############
-# compile and run tests
+# compile main program
 #############
 
-cd test/build
-echo "Building tests..."
+cd "$repoDir"
+echo "Building sbewh..."
+cd code/build
 
-cmake .. &> /dev/null
+cmake -DSBE_WH_LAPACK=ON -DSBE_WH_MPI=ON .. &> /dev/null
 if [ $? -ne 0 ]; then
     rm CMakeCache.txt
     err=$(cmake ..  2>&1 >/dev/null)
@@ -57,8 +50,12 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+#############
+# run tests
+#############
+
 echo "Running tests..."
-out=$(./t)
+out=$(./test_sbewh)
 if [ $? -ne 0 ]; then
     echo " -> ./t tests failed"
     echo "--------------------";
@@ -71,46 +68,13 @@ if [ $? -ne 0 ]; then
 fi
 
 
-#############
-# compile main program
-#############
-
-cd "$repoDir"
-echo "Building sbewh..."
-if [ ! -e build ]; then
-    mkdir build
-fi
-cd build
-
-cmake .. &> /dev/null
-if [ $? -ne 0 ]; then
-    rm CMakeCache.txt
-    err=$(cmake ..  2>&1 >/dev/null)
-    if [ $? -ne 0 ]; then
-        echo " -> cmake failed";
-        echo "----------------";
-        echo "";
-        echo "$err"
-        exit 1;
-    fi
-fi
-
-out=$(make -j4)
-if [ $? -ne 0 ]; then
-    echo " -> make failed"
-    echo "---------------";
-    echo "";
-    echo "$out"
-    exit 1
-fi
-
 
 #############
 # run examples in dry run mode
 #############
 
 echo "Running examples in dry mode..."
-cd "$repoDir/build"
+cd "$repoDir/code/build"
 if [ ! -e examples ]; then
     mkdir examples
 else
@@ -155,9 +119,9 @@ done;
 #############
 
 echo "Generating and comparing bash completion file..."
-cd $repoDir/build
-../hooks/generateBashCompletionScript.py > completion.sh
-diffOut=$(diff <(sed '/complete -F/d' completion.sh) <( sed '/complete -F/d' ../scripts/completion.sh) -b -B)
+cd $repoDir/code/build
+../../hooks/generateBashCompletionScript.py > completion.sh
+diffOut=$(diff <(sed '/complete -F/d' completion.sh) <( sed '/complete -F/d' ../bash-completion/sbewh) -b -B)
 lineCount=$(echo -n "$diffOut" | grep -c '^')
 if [ $lineCount -ne 0 ]; then
     echo "Completion script differs too much to freshly generated one (in ../build/completion.sh)\n"

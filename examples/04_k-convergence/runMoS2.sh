@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
-call_sbewh="mpiexec -np 4 ../../build/sbewh inputMoS2.txt"
+if [ $# -eq 1 ]; then
+    sbewhPath="$1"
+else
+    sbewhPath="sbewh"
+fi
+
+call_sbewh="mpiexec -np 4 ${sbewhPath} inputMoS2.txt"
 outDir=convergenceMoS2
 
 # remove old calculation to avoid abortion of sbewh because run is already set

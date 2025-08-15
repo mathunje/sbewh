@@ -10,12 +10,12 @@ It describes a typical HHG calculation for MoS2 and specifies some default optio
 where the first parameter is the number of ellipticities to generate and the second one the maximum field strength. Look at the **ellipticities.txt** file. Each section (their names can be selected as desired) specifies a new pulse. The given parameter override the default options.  To run the SBE calculation for all pulses, you can start the calculation via:
 
 ```
-mpiexec -np 16 ../../build/sbewh [input.txt]
+mpiexec -np 16 sbewh [input.txt]
 ```
 (Maybe you have to reduce the number of processes). It is possible to finish the propagation of all remaining pulses after a unexpected termination , that may occur for instance because of time limits in slurm. To do call the program as
 
 ```
-mpiexec -np 16 ../../build/sbewh -General.finishMultiRuns=1 [input.txt]
+mpiexec -np 16 sbewh -General.finishMultiRuns=1 [input.txt]
 ```
 
 Most of the visualization scripts provide a subrun option for instance you can inspect HHG of the right-circular polarized pulse via

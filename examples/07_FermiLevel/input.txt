@@ -10,7 +10,7 @@ occupiedBelowBandGap = 1
 Nf = 8 8 8
 
 [Diagonalization]
-mode = zheevd
+mode = zheevd # This is only allowed if compiled with LAPACK
 
 [Parallelization]
 useGPU = 0

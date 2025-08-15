@@ -7,7 +7,7 @@ When a parameter is padded by a number, a new pulse contribution will be created
 The default parameter pulse will is used if no numbered pulse parameter is present.
 Run
 ```
-  ../../build/sbewh
+  sbewh [input.txt]
 ```
 to obtain a superposition of different pulses of all available pulse types.
 It will output a **pulseDetail.npz** in the run directory, which can be visualized via

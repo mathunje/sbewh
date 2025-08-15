@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
-call_sbewh="mpiexec ../../build/sbewh inputSilicon.txt"
+if [ $# -eq 1 ]; then
+    sbewhPath="$1"
+else
+    sbewhPath="sbewh"
+fi
+
+call_sbewh="mpiexec -np 4 ${sbewhPath} inputSilicon.txt"
 outDir="./convergenceSilicon"
 
 # remove old calculation to avoid abortion of sbewh because run is already set

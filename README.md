@@ -18,7 +18,7 @@ M. Thümmler, T. Lettau,  A. Croy, U. Peschel, and S. Gräfe,  Semiconductor Blo
 
 Our code was written using the C++20 standard and requires the following dependencies. Version numbers refer to the the ones used in development.
 
-C++ gcc 13.3
+C++ (gcc 13.3)
 - FFTW 3.3.10
 - Boost version >= 1.53
 - zlib 1.3.1
@@ -46,27 +46,25 @@ nix develop --extra-experimental-features flakes --extra-experimental-features  
 
 ## Installation instructions (Linux)
 
-After cloning this repository, create a build directory and run cmake:
+After cloning this repository, create a build directory and run cmake
 
 ```bash
-mkdir build && cd build && cmake ..
+mkdir code/build && cd code/build && cmake ..
 ```
 
-The libraries are automatically detected. Now you can compile the project using
+We encourage to compile the program for performance reasons with at least with LAPACK (*-DSBE_WH_LAPACK=ON*) and MPI (*-DSBE_WH_MPI=ON*). The remaining options can be inspected in the provided *CMakeLists.txt*. Now you can compile the project using
 
 ```bash
 make -j
 ```
 
-The executable is called **sbewh** (Semiconductor Bloch Equations in Wannier-Houston Basis).
-
-If you want to enable autocompletion in your bash you may goto *scripts* and:
+The executable is called **sbewh** (Semiconductor Bloch Equations in Wannier-Houston Basis). You may want to install the executable via
 
 ```bash
-source completion.sh
+make install
 ```
 
-Currently, the autocompletion will only work inside your build directory. If you want to change this, just add **sbewh** to the **PATH** variable and change the last line of **completion.sh** accordingly.
+The executable will be installed with autocompletion. If you want to have autocompletion without installing, jsut source *code/bash-completion/sbewh* and  **sbewh** to the **PATH** variable.
 
 ## Documentation and Examples
 

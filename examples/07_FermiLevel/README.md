@@ -11,7 +11,7 @@ The SBE calculation starts with a Fermi distribution of the occupied bands. The 
 To gain more information about the automatic Fermi level selection, one can use the **FermiLevel** run mode as it is done in **input.txt**.
 You can run the example using
 ```
-../../build/sbewh input.txt
+sbewh input.txt
 ```
 
 The second input file **inputApproximateDiagonalization.txt** demonstrates the adaption of the diagonalization routine. We emphasize that for the default parameters Lapack is called, which is almost always numerically more robust and faster.

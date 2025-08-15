@@ -1,12 +1,12 @@
 ## General remarks on examples
 
-Before running the examples, please extract the **data.zip** in the **data**. All the examples assume, that **sbewh** is available in the **build** directory.
+Before running the examples, please extract the **data.zip** in the **data**. All the examples assume, that **sbewh**  was installed with MPI
 
 The examples **may fail on purpose** if you start them via MPI with more processes than FFT blocks.
 In all examples it is save to run
 
 ```
-mpiexcec -np 4 ../../build/sbewh [input.txt]
+mpiexcec -np 4 sbewh [input.txt]
 ```
 or to increase the size of the propagation grid in the input file to ensure that each process can evaluated at least one subgrid.
 

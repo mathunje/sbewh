@@ -4,7 +4,7 @@ First have a look at the **inputDephasing.txt** file.
 The density matrix is propagated under a weak gaussian pulse (no oscillations).
 
 ```
-[mpiexec -np 4] ../../build/sbewh inputDephasing.txt
+[mpiexec -np 4] sbewh inputDephasing.txt
 ```
 
 The absorption spectra can be displayed via
