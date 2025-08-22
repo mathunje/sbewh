@@ -8,7 +8,9 @@
 
 #include<math.h>
 
+#include "sbewhConfig.h"
 #include "parallel/MpiParameter.h"
+#include "parallel/mpiUtil.h"
 
 template<typename T, unsigned N>
 class GeomVector{
@@ -246,8 +248,15 @@ struct std::hash<CellIndex>
     }
 };
 
-void mpi_bcast(GeomVector3d &v, const MpiParameter_t &p);
-void mpi_bcast(CellIndex &v, const MpiParameter_t &p);
-
+template<typename T, unsigned N>
+void mpi_bcast(GeomVector<T, N> &v, const MpiParameter_t &p)
+{
+#ifdef SBE_WH_MPI
+    std::array<T, N> data = v.getArray();
+    mpi_bcast_trivial(data, p);
+    if ( p.rank != p.root )
+        v = GeomVector<T, N>(data);
+#endif
+}
 
 #endif

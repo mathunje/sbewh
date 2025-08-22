@@ -17,13 +17,13 @@ void mpi_finalize();
 
 
 
-template <typename T> void mpi_bcast(T, int) = delete;
+template <typename T> void mpi_bcast(T&, const MpiParameter_t&) = delete;
 
 void mpi_bcast(std::string &s, const MpiParameter_t &p);
 void mpi_bcast(std::vector<std::string> &v, const MpiParameter_t &p);
 
 
-template<typename T> void mpi_bast_trivial(T&, int) = delete;
+template<typename T> void mpi_bast_trivial(T&, const MpiParameter_t&) = delete;
 
 template<typename T>
 void mpi_bcast_trivial(std::vector<T> &v, const MpiParameter_t &p)

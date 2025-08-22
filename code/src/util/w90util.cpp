@@ -443,6 +443,13 @@ bool w90_projectRealSpaceOperators(std::unordered_map<CellIndex, W90_realSpaceOp
     return true;
 }
 
+void mpi_bcast(W90_mat2D &m, const MpiParameter_t &p)
+{
+#ifdef SBE_WH_MPI
+    int cnt = m.getColSize() * m.getRowSize();
+    MPI_Bcast(reinterpret_cast<char*>(m.data()), cnt*sizeof(*m.data()), MPI_CHAR, p.root, MPI_COMM_WORLD);
+#endif
+}
 
 void mpi_bcast(W90_realSpaceOperators &rso, const MpiParameter_t &p)
 {

@@ -9,10 +9,12 @@
 #include<unordered_map>
 #include<memory>
 
+#include "sbewhConfig.h"
 #include "GeomVector.hpp"
 #include "unitConversion.h"
 
 #include "parallel/MpiParameter.h"
+#include "parallel/mpiUtil.h"
 
 class W90_mat2D{
     unsigned colSize, rowSize;
