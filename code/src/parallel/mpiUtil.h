@@ -2,6 +2,7 @@
 #define SBE_WH_MPI_UTIL_H
 
 #include<string>
+#include<array>
 #include<vector>
 #include<complex>
 
