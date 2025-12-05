@@ -5,8 +5,8 @@ DiagonalizationParameterValidator::DiagonalizationParameterValidator(ParameterIO
 {
     dmMap["jacobi"] = DiagMode::jacobi;
 #ifdef SBE_WH_LAPACK
-    dmMap["zheev"] = DiagMode::zheev;
-    dmMap["zheevd"] = DiagMode::zheevd;
+    dmMap["zheev"] = DiagMode::lzheev;
+    dmMap["zheevd"] = DiagMode::lzheevd;
     for(auto it = dmMap.begin(); it != dmMap.end(); ++it){
         if (it == dmMap.begin()){
             allowedModes += it->first;

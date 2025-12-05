@@ -18,7 +18,7 @@
 #include<omp.h>
 #endif
 
-enum DiagMode { jacobi, zheev, zheevd };
+enum DiagMode { jacobi, lzheev, lzheevd };
 
 class DiagonalizatorSingle{
     const double eps = 1e-15;

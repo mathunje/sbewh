@@ -6,8 +6,8 @@ DiagonalizatorSingle::DiagonalizatorSingle(DiagMode dm, unsigned matSize) :
     switch(diagMode){
         case jacobi: initJacobi(); break;
 #ifdef SBE_WH_LAPACK
-        case zheev: initZheev(); break;
-        case zheevd: initZheevd(); break;
+        case lzheev: initZheev(); break;
+        case lzheevd: initZheevd(); break;
 #endif
     }
 }
@@ -17,8 +17,8 @@ int DiagonalizatorSingle::diag(std::complex<double> *A, double * eigenValues)
     switch(diagMode){
         case jacobi: return diagJacobi(A, eigenValues);
 #ifdef SBE_WH_LAPACK
-        case zheev: return diagZheev(A, eigenValues);
-        case zheevd: return diagZheevd(A, eigenValues);
+        case lzheev: return diagZheev(A, eigenValues);
+        case lzheevd: return diagZheevd(A, eigenValues);
 #endif
         default: return -1;
     }
