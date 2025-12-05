@@ -41,7 +41,7 @@ def showEllipticityMap(inputVars, data, plotOpts):
 
 
 def parsePulses(baseDir, multiRunFname, basePulseParam):
-    runs = runParsing.parseMultiConfigFile(os.path.join(baseDir, multiRunFname))
+    runs = runParsing.parseMultiConfigFile(os.path.join(baseDir, os.path.basename(multiRunFname)))
     Emax = np.zeros(len(runs))
     ellipticity = np.zeros(len(runs))
     changedVars = set()
