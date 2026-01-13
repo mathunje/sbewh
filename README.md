@@ -12,7 +12,10 @@ We provide a variety of python scripts to visualize the high-harmonic spectrum, 
 
 When using our solver for a publication, we kindly ask you to cite
 
-M. Thümmler, T. Lettau,  A. Croy, U. Peschel, and S. Gräfe,  Semiconductor Bloch equations in *Wannier gauge with well-behaved dephasing*, ...
+Martin Thümmler, Thomas Lettau, Alexander Croy, Ulf Peschel, Stefanie Gräfe,
+*Semiconductor Bloch equations in Wannier gauge with well-behaved dephasing*
+Computer Physics Communications, Volume 320, 2026, 109958
+[DOI](https://doi.org/10.1016/j.cpc.2025.109958)
 
 ## Requirements
 
